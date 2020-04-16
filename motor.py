@@ -8,7 +8,7 @@
 import RPi.GPIO as GPIO
 import time 
 
-motorPins = (12, 16, 18, 22)    # define pins connected to four phase ABCD of stepper motor
+motorPins = (18, 23, 24, 25)    # define pins connected to four phase ABCD of stepper motor
 CCWStep = (0x01,0x02,0x04,0x08) # define power supply order for rotating anticlockwise 
 CWStep = (0x08,0x04,0x02,0x01)  # define power supply order for rotating clockwise
 
