@@ -39,18 +39,25 @@ def motorStop():
     for i in range(0,4,1):
         GPIO.output(motorPins[i],GPIO.LOW)
             
+#def loop():
+ #   while True:
+#        direction=input('Direction 1 or 0, time and cycle number')
+#        dir_number=int(direction)
+ #       ms=input('Ms, need to be higher than 3: ')
+  #      ms_number=int(ms)
+   #     steps=input('Number of steps, in program 512:')
+    #    steps_number=int(steps)
+     #   moveSteps(dir_number,ms_number,steps_number)  # rotating 360 deg clockwise, a total of 2048 steps in a circle, 512 cycles
+      #  time.sleep(0.5)
+       # moveSteps(0,3,512)  # rotating 360 deg anticlockwise
+        #time.sleep(0.5)
 def loop():
     while True:
-        direction=input('Direction 1 or 0, time and cycle number')
-        dir_number=int(direction)
-        ms=input('Ms, need to be higher than 3: ')
-        ms_number=int(ms)
-        steps=input('Number of steps, in program 512:')
-        steps_number=int(steps)
-        moveSteps(dir_number,ms_number,steps_number)  # rotating 360 deg clockwise, a total of 2048 steps in a circle, 512 cycles
+        moveSteps(1,3,512)  # rotating 360 deg clockwise, a total of 2048 steps in a circle, 512 cycles
         time.sleep(0.5)
         moveSteps(0,3,512)  # rotating 360 deg anticlockwise
         time.sleep(0.5)
+
 
 def destroy():
     GPIO.cleanup()             # Release resource
