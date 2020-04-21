@@ -43,9 +43,7 @@ def loop():
     while True:
         moveSteps(1,3,512)  # rotating 360 deg clockwise, a total of 2048 steps in a circle, 512 cycles
         time.sleep(0.5)
-        print("sleep")
         moveSteps(0,3,512)  # rotating 360 deg anticlockwise
-        print("sleep")
         time.sleep(0.5)
 
 def destroy():
