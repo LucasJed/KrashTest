@@ -1,5 +1,6 @@
 import tkinter as tk  # python 3
 from tkinter import font  as tkfont  # python 3
+import os
 
 
 class SampleApp(tk.Tk):
@@ -18,7 +19,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, RecentsPage, ParamsPage, AdminPage, ValidationPage, PrecessingPage, ErrorProcessPage,EndProcessPage):
+        for F in (HomePage, RecentsPage, ParamsPage, AdminPage, ValidationPage, ProcessingPage, ErrorProcessPage,EndProcessPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -40,6 +41,9 @@ class SampleApp(tk.Tk):
 
 class HomePage(tk.Frame):
 
+    def helloCallBack(self):
+        os.system('control.py')
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -52,10 +56,14 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame("ParamsPage"))
         button3 = tk.Button(self, text="Parametres administrateur",
                             command=lambda: controller.show_frame("AdminPage"))
-
+        button4 = tk.Button(self, text="Parametres administrateur",
+                            command=self.helloCallBack)
         button1.pack()
         button2.pack()
         button3.pack()
+        button4.pack()
+
+
 
 
 # motifs recents -> (validation + datas, home) (RecentsPage)
