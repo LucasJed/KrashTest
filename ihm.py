@@ -1,7 +1,7 @@
 import tkinter as tk  # python 3
 from tkinter import font  as tkfont  # python 3
 import os
-
+import instructionCreations
 
 class SampleApp(tk.Tk):
 
@@ -42,7 +42,8 @@ class SampleApp(tk.Tk):
 class HomePage(tk.Frame):
 
     def helloCallBack(self):
-        os.system('control.py')
+        #os.system('control.py')
+        instructionCreations.a.tableau()
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
