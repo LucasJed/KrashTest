@@ -2,6 +2,7 @@ import tkinter as tk  # python 3
 from tkinter import font  as tkfont  # python 3
 import os
 import instructionCreations
+import dao
 
 class SampleApp(tk.Tk):
 
@@ -76,10 +77,18 @@ class RecentsPage(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="Parametres recents", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
+        lb1 = tk.Listbox(self)
+        list_items= dao.liste_sauvegardes()
+        j=1
+        for i in list_items:
+            lb1.insert(j,i)
+            j=j+1
+
         validationButton =tk.Button(self, text="Valider les parametres",
                                command=lambda: controller.show_frame("ValidationPage"))
         homeButton = tk.Button(self, text="Go to the start page",
                                command=lambda: controller.show_frame("HomePage"))
+        lb1.pack()
         validationButton.pack()
         homeButton.pack()
 
