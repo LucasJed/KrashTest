@@ -4,6 +4,7 @@ import os
 import instructionCreations
 import dao
 
+
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -20,7 +21,10 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, RecentsPage, ParamsPage, AdminPage, ValidationPage, ProcessingPage, ErrorProcessPage,EndProcessPage):
+        # Liste des pages disponibles
+        for F in (
+                HomePage, RecentsPage, ParamsPage, AdminPage, ValidationPage, ProcessingPage, ErrorProcessPage,
+                EndProcessPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -37,13 +41,20 @@ class SampleApp(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
+    # Cette fonction permet d'ouvrir une nouvelle fenetre avec des parametres
+    def show_frame_arg(self, page_name, arg):
+        frame = self.frames[page_name]
+        frame.tkraise()
+        if arg:
+            frame.arg = arg
+
 
 # home -> (motifs recents, parametres, admin) (HomePage)
 
 class HomePage(tk.Frame):
 
     def helloCallBack(self):
-        #os.system('control.py')
+        # os.system('control.py')
         instructionCreations.a.tableau()
 
     def __init__(self, parent, controller):
@@ -66,8 +77,6 @@ class HomePage(tk.Frame):
         button4.pack()
 
 
-
-
 # motifs recents -> (validation + datas, home) (RecentsPage)
 
 class RecentsPage(tk.Frame):
@@ -78,20 +87,22 @@ class RecentsPage(tk.Frame):
         label = tk.Label(self, text="Parametres recents", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         lb1 = tk.Listbox(self)
-        list_items= dao.liste_sauvegardes()
-        j=1
+        list_items = dao.liste_sauvegardes()
+        j = 1
         for i in list_items:
-            lb1.insert(j,i)
-            j=j+1
+            lb1.insert(j, i)
+            j = j + 1
 
-        validationButton =tk.Button(self, text="Valider les parametres",
-                               command=lambda: controller.show_frame("ValidationPage"))
+        self.selection=""
+        validationButton = tk.Button(self, text="Valider les parametres",
+                                     command=lambda: [print(lb1.get(lb1.curselection())),
+                                                      self.controller.show_frame_arg("ValidationPage",
+                                                                                     lb1.get(lb1.curselection()))])
         homeButton = tk.Button(self, text="Go to the start page",
                                command=lambda: controller.show_frame("HomePage"))
         lb1.pack()
         validationButton.pack()
         homeButton.pack()
-
 
 
 # Parametres -> (validation + datas, home) (ParamsPage)
@@ -119,7 +130,8 @@ class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Parametres administrateur: \n Taille fraiseuse: \n ..." , font=controller.title_font)
+        label = tk.Label(self, text="Parametres administrateur: \n Taille fraiseuse: \n ...",
+                         font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
         button1 = tk.Button(self, text="Valider et retour au menu ",
@@ -136,14 +148,17 @@ class ValidationPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
         label = tk.Label(self, text="Validation en cours", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
-
+        #TODO
+        #label = tk.Label(self,text=super.)
         button1 = tk.Button(self, text="Lancer l'impression",
                             command=lambda: controller.show_frame("ProcessingPage "))
         button2 = tk.Button(self, text="Erreur, retour au menu",
                             command=lambda: controller.show_frame("HomePage"))
 
+        label.pack()
         button1.pack()
         button2.pack()
 
@@ -179,6 +194,7 @@ class ErrorProcessPage(tk.Frame):
 
         button1.pack()
 
+
 # EndProcessPage -> homepage (ErrorProcessPage)
 class EndProcessPage(tk.Frame):
 
@@ -193,20 +209,21 @@ class EndProcessPage(tk.Frame):
 
         button1.pack()
 
+
 class FullScreenApp(object):
     def __init__(self, master, **kwargs):
-                self.master = master
-                pad = 3
-                self._geom = '200x200+0+0'
-                master.geometry("{0}x{1}+0+0".format(
-                    master.winfo_screenwidth() - pad, master.winfo_screenheight() - pad))
-                master.bind('<Escape>', self.toggle_geom)
+        self.master = master
+        pad = 3
+        self._geom = '200x200+0+0'
+        master.geometry("{0}x{1}+0+0".format(
+            master.winfo_screenwidth() - pad, master.winfo_screenheight() - pad))
+        master.bind('<Escape>', self.toggle_geom)
 
     def toggle_geom(self, event):
-                geom = self.master.winfo_geometry()
-                print(geom, self._geom)
-                self.master.geometry(self._geom)
-                self._geom = geom
+        geom = self.master.winfo_geometry()
+        print(geom, self._geom)
+        self.master.geometry(self._geom)
+        self._geom = geom
 
 
 if __name__ == "__main__":
