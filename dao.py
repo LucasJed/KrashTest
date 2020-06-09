@@ -2,31 +2,45 @@ import json
 import os
 import tinydb
 
-def import_fichier():
-    with open("data_file.json", 'r', encoding='utf-8') as sauv:
-        return (json.loads(sauv.read()))
+
+def init_parametre_admin():
+    db_admin = tinydb.TinyDB('sauvegardes/admin.json')
+    db_admin.insert({"title":
+
+        {
+            "nom": "adminBasic",
+            "tailleFraise ": 0.5
+        }}
+
+    )
+    return db_admin
 
 
-def liste_parametres_administrateur():
-    print(import_fichier())
+def init_parametre_empreinte():
+    db_empreinte = tinydb.TinyDB('sauvegardes/empreinte.json')
+    return db_empreinte
 
 
-def ajouter_parametre(dictionary):
-    print(dictionary["nom"])
-    nom = "sauvegardes/"+dictionary["nom"]+".json"
-    with open(nom, "w") as outfile:
-        json_object = json.dumps(dictionary, indent=4)
+def get_specific_parameter_admin(nom):
+    db_admin = init_parametre_admin()
+    recherche = tinydb.Query()
+    print(db_admin.all())
+    return db_admin.search(recherche.nom == nom)
 
-        outfile.write(json_object)
+def get_specific_parameter_empreinte(nom):
+    db_empreinte=init_parametre_empreinte()
+    recherche=tinydb.Query()
+    return db_empreinte.search(recherche.nom==nom)
 
-def liste_sauvegardes():
-    arr = os.listdir("sauvegardes")
-    print(arr)
-    return (arr)
+def get_all_parameter_admin():
+    db_admin=init_parametre_admin()
+    return db_admin.all()
 
+def get_all_parameter_empreinte():
+    db_empreinte = init_parametre_empreinte()
+    return db_empreinte.all()
 
-
-dictionaire ={
+dictionaire = {
     "nom": "parametre3",
     "diametre_fut": "2",
     "hauteur_fut": "2",
@@ -35,6 +49,7 @@ dictionaire ={
     "nb_pose": "3"
 }
 
-ajouter_parametre(dictionaire)
-liste_parametres_administrateur()
-liste_sauvegardes()
+init_parametre_admin()
+init_parametre_empreinte()
+print(get_all_parameter_admin())
+print(get_specific_parameter_admin("adminBasic"))
