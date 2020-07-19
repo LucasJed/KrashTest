@@ -1,6 +1,7 @@
 import tkinter as tk  # python 3
 from tkinter import font  as tkfont  # python 3
 import os
+import tinydb
 import instructionCreations
 import dao
 
@@ -9,6 +10,7 @@ class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.attributes('-fullscreen', 1)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
 
@@ -19,7 +21,7 @@ class SampleApp(tk.Tk):
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
+        self.current_selected=None
         self.frames = {}
         # Liste des pages disponibles
         for F in (
@@ -36,20 +38,24 @@ class SampleApp(tk.Tk):
 
         self.show_frame("HomePage")
 
+    def edit_current_selection(selected):
+        print("lancé"+ selected)
+        SampleApp.current_selected=selected
+
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
 
     # Cette fonction permet d'ouvrir une nouvelle fenetre avec des parametres
-    def show_frame_arg(self, page_name, arg):
+    def show_frame_arg(self, page_name,arg):
         frame = self.frames[page_name]
-        frame.tkraise()
         if arg:
             frame.arg = arg
-
+        frame.tkraise()
 
 # home -> (motifs recents, parametres, admin) (HomePage)
+
 
 class HomePage(tk.Frame):
 
@@ -87,17 +93,20 @@ class RecentsPage(tk.Frame):
         label = tk.Label(self, text="Parametres recents", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         lb1 = tk.Listbox(self)
-        list_items = dao.liste_sauvegardes()
+        list_items = dao.get_all_parameter_empreinte()
         j = 1
         for i in list_items:
             lb1.insert(j, i)
             j = j + 1
 
-        self.selection=""
+
+        #self.selection = ""
+        SampleApp.current_selected=None
+
         validationButton = tk.Button(self, text="Valider les parametres",
-                                     command=lambda: [print(lb1.get(lb1.curselection())),
+                                     command=lambda: [
                                                       self.controller.show_frame_arg("ValidationPage",
-                                                                                     lb1.get(lb1.curselection()))])
+                                                                                     SampleApp.edit_current_selection(lb1.get(lb1.curselection())))])
         homeButton = tk.Button(self, text="Go to the start page",
                                command=lambda: controller.show_frame("HomePage"))
         lb1.pack()
@@ -148,19 +157,23 @@ class ValidationPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-
+        args=" - "
         label = tk.Label(self, text="Validation en cours", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
-        #TODO
-        #label = tk.Label(self,text=super.)
+        # TODO
+        print("caca")
+        print(SampleApp.current_selected)
+        label2 = tk.Label(self, text=str(SampleApp.current_selected))
         button1 = tk.Button(self, text="Lancer l'impression",
-                            command=lambda: controller.show_frame("ProcessingPage "))
+                            command=lambda: controller.show_frame("ProcessingPage"))
         button2 = tk.Button(self, text="Erreur, retour au menu",
                             command=lambda: controller.show_frame("HomePage"))
 
         label.pack()
+        label2.pack()
         button1.pack()
         button2.pack()
+        print("end validation page")
 
 
 # Proccess -> (end process, error) (PrecessingPage)
@@ -210,7 +223,7 @@ class EndProcessPage(tk.Frame):
         button1.pack()
 
 
-class FullScreenApp(object):
+'''class FullScreenApp(object):
     def __init__(self, master, **kwargs):
         self.master = master
         pad = 3
@@ -224,11 +237,20 @@ class FullScreenApp(object):
         print(geom, self._geom)
         self.master.geometry(self._geom)
         self._geom = geom
+'''
+
+
+def launch_ihm():
+    app = SampleApp()
+    app.mainloop()
+    root = tk.Tk()
+    # app = FullScreenApp(root)
+    app.mainloop()
 
 
 if __name__ == "__main__":
     app = SampleApp()
     app.mainloop()
     root = tk.Tk()
-    app = FullScreenApp(root)
+    # app = FullScreenApp(root)
     root.mainloop()
